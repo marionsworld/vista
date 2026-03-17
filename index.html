@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Forge — HTML Visual Editor</title>
+<title>Vista — HTML Visual Editor</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Inter:ital,wght@0,400;0,500;0,600&display=swap" rel="stylesheet">
 <!-- CodeMirror 6 -->
@@ -512,7 +512,7 @@
 
   <!-- ── TOOLBAR ── -->
   <div id="toolbar">
-    <div class="toolbar-brand"><span class="dot"></span> forge</div>
+    <div class="toolbar-brand"><span class="dot"></span> Vista</div>
     <div class="toolbar-sep"></div>
 
     <!-- Undo/Redo -->
@@ -672,7 +672,7 @@
 
 <script>
 // ═══════════════════════════════════════════════════════════════
-// FORGE — HTML Visual Editor
+// Vista — HTML Visual Editor
 // ═══════════════════════════════════════════════════════════════
 
 // ── STATE ───────────────────────────────────────────────────────
@@ -739,7 +739,7 @@ const DEFAULT_HTML = `<!DOCTYPE html>
 </head>
 <body>
   <header>
-    <h1>Welcome to Forge</h1>
+    <h1>Welcome to Vista</h1>
     <p>Click any element to select it, then edit properties on the right.</p>
   </header>
   <main>
@@ -834,18 +834,18 @@ function updatePreview(immediate = false) {
 
 function injectHelpers(html) {
   const helperCSS = `
-<style id="__forge_styles__">
-.__forge_hover__ { outline: 2px solid rgba(91,110,245,0.5) !important; outline-offset: 1px !important; cursor: pointer !important; }
-.__forge_selected__ {
+<style id="__Vista_styles__">
+.__Vista_hover__ { outline: 2px solid rgba(91,110,245,0.5) !important; outline-offset: 1px !important; cursor: pointer !important; }
+.__Vista_selected__ {
   outline: 2px solid #5b6ef5 !important;
   outline-offset: 1px !important;
   background-color: rgba(91,110,245,0.06) !important;
 }
-.__forge_editable__:hover { outline: 2px dashed rgba(62,207,142,0.7) !important; cursor: text !important; }
+.__Vista_editable__:hover { outline: 2px dashed rgba(62,207,142,0.7) !important; cursor: text !important; }
 </style>`;
 
   const helperScript = `
-<script id="__forge_script__">
+<script id="__Vista_script__">
 (function() {
   var inspectMode = false;
   var editMode = false;
@@ -879,12 +879,12 @@ function injectHelpers(html) {
   function highlightByPath(path) {
     deselect();
     var el = getByPath(path);
-    if (el) { el.classList.add('__forge_selected__'); }
+    if (el) { el.classList.add('__Vista_selected__'); }
   }
 
   function deselect() {
-    document.querySelectorAll('.__forge_selected__').forEach(function(el) {
-      el.classList.remove('__forge_selected__');
+    document.querySelectorAll('.__Vista_selected__').forEach(function(el) {
+      el.classList.remove('__Vista_selected__');
     });
   }
 
@@ -900,15 +900,15 @@ function injectHelpers(html) {
   }
 
   function updateEditBindings() {
-    document.querySelectorAll('.__forge_editable__').forEach(function(el) {
+    document.querySelectorAll('.__Vista_editable__').forEach(function(el) {
       el.removeEventListener('dblclick', onDblClick);
       el.contentEditable = 'false';
-      el.classList.remove('__forge_editable__');
+      el.classList.remove('__Vista_editable__');
     });
     if (editMode) {
       var textEls = document.querySelectorAll('p, h1, h2, h3, h4, h5, h6, span, a, li, td, th, label, button, strong, em');
       textEls.forEach(function(el) {
-        el.classList.add('__forge_editable__');
+        el.classList.add('__Vista_editable__');
         el.addEventListener('dblclick', onDblClick);
       });
     }
@@ -917,20 +917,20 @@ function injectHelpers(html) {
   function onHover(e) {
     if (e.target === document.body || e.target === document.documentElement) return;
     var el = e.target;
-    while (el && el.id && el.id.startsWith('__forge')) el = el.parentElement;
-    if (el) el.classList.add('__forge_hover__');
+    while (el && el.id && el.id.startsWith('__Vista')) el = el.parentElement;
+    if (el) el.classList.add('__Vista_hover__');
   }
   function onOut(e) {
-    if (e.target) e.target.classList.remove('__forge_hover__');
+    if (e.target) e.target.classList.remove('__Vista_hover__');
   }
   function onClick(e) {
     if (!inspectMode) return;
     e.preventDefault(); e.stopPropagation();
     var el = e.target;
-    while (el && el.id && el.id.startsWith('__forge')) el = el.parentElement;
+    while (el && el.id && el.id.startsWith('__Vista')) el = el.parentElement;
     if (!el || el === document.body || el === document.documentElement) return;
     deselect();
-    el.classList.add('__forge_selected__');
+    el.classList.add('__Vista_selected__');
     var cs = window.getComputedStyle(el);
     var style = {
       color: cs.color, backgroundColor: cs.backgroundColor,
@@ -959,7 +959,7 @@ function injectHelpers(html) {
       path: getPath(el),
       tag: el.tagName.toLowerCase(),
       id: el.id || '',
-      className: el.className.replace('__forge_selected__','').replace('__forge_hover__','').trim(),
+      className: el.className.replace('__Vista_selected__','').replace('__Vista_hover__','').trim(),
       computed: style,
       inlineStyle: inlineStyle,
       innerHTML: el.innerHTML,
@@ -1098,11 +1098,11 @@ function handleTextEdited(data) {
 
   // Get full HTML of document and sync
   const newHTML = '<!DOCTYPE html>\n' + doc.documentElement.outerHTML
-    .replace(/<style id="__forge_styles__">[\s\S]*?<\/style>/, '')
-    .replace(/<script id="__forge_script__">[\s\S]*?<\/script>/, '')
-    .replace(/ class="__forge_selected__"/g, '')
-    .replace(/ class="__forge_editable__"/g, '')
-    .replace(/ class="__forge_hover__"/g, '');
+    .replace(/<style id="__Vista_styles__">[\s\S]*?<\/style>/, '')
+    .replace(/<script id="__Vista_script__">[\s\S]*?<\/script>/, '')
+    .replace(/ class="__Vista_selected__"/g, '')
+    .replace(/ class="__Vista_editable__"/g, '')
+    .replace(/ class="__Vista_hover__"/g, '');
 
   const oldVal = editor.getValue();
   editor.setValue(newHTML);
@@ -1361,11 +1361,11 @@ function syncStylesToEditor() {
 
   // Extract the clean HTML (without injected helpers)
   let newHTML = '<!DOCTYPE html>\n' + doc.documentElement.outerHTML
-    .replace(/<style id="__forge_styles__">[\s\S]*?<\/style>\s*/g, '')
-    .replace(/<script id="__forge_script__">[\s\S]*?<\/script>\s*/g, '')
-    .replace(/ class="__forge_selected__"/g, '')
-    .replace(/ class="__forge_editable__"/g, '')
-    .replace(/ class="__forge_hover__"/g, '');
+    .replace(/<style id="__Vista_styles__">[\s\S]*?<\/style>\s*/g, '')
+    .replace(/<script id="__Vista_script__">[\s\S]*?<\/script>\s*/g, '')
+    .replace(/ class="__Vista_selected__"/g, '')
+    .replace(/ class="__Vista_editable__"/g, '')
+    .replace(/ class="__Vista_hover__"/g, '');
 
   editor.setValue(newHTML);
   pushHistory(newHTML);
@@ -1392,11 +1392,11 @@ function refreshLayers() {
 
 function buildLayerTree(el, depth, path) {
   if (!el || el.nodeType !== 1) return '';
-  if (el.id && el.id.startsWith('__forge')) return '';
+  if (el.id && el.id.startsWith('__Vista')) return '';
 
   const tag = el.tagName.toLowerCase();
   const id = el.id || '';
-  const className = (el.className || '').replace('__forge_selected__','').replace('__forge_hover__','').trim().split(' ')[0];
+  const className = (el.className || '').replace('__Vista_selected__','').replace('__Vista_hover__','').trim().split(' ')[0];
   const hasChildren = el.children.length > 0 && !['img','br','hr','input','meta','link'].includes(tag);
   const pathKey = path.join('-');
   const isExpanded = depth < 3 || state.layersExpanded.has(pathKey);
@@ -1464,7 +1464,7 @@ function selectByPath(path) {
 
     handleElementSelected({
       path, tag: el.tagName.toLowerCase(), id: el.id||'',
-      className: el.className.replace('__forge_selected__','').replace('__forge_hover__','').trim(),
+      className: el.className.replace('__Vista_selected__','').replace('__Vista_hover__','').trim(),
       computed,
     });
   }
